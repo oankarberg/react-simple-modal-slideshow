@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import debug from 'debug';
+import React, { Component } from "react";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import debug from "debug";
+import PropTypes from "prop-types";
+import SimpleModal from "./SimpleModal.jsx";
 
-import SimpleModal from './SimpleModal.jsx';
-
-const log = debug('modal-slideshow:log');
+const log = debug("modal-slideshow:log");
 
 export default class SimpleModalSlideshow extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class SimpleModalSlideshow extends Component {
     this.state = {
       open: false,
       currentSlide: 0,
-      slideAnimationDirection: 'left',
+      slideAnimationDirection: "left"
     };
 
     // Prepare keyboard event listener
@@ -56,8 +56,12 @@ export default class SimpleModalSlideshow extends Component {
 
     // If classNamePrefix is updated, make sure to update flag on html tag if set
     if (nextProps.classNamePrefix !== this.props.classNamePrefix) {
-      document.documentElement.classList.remove(`${this.props.classNamePrefix}--opened`);
-      document.documentElement.classList.add(`${nextProps.classNamePrefix}--opened`);
+      document.documentElement.classList.remove(
+        `${this.props.classNamePrefix}--opened`
+      );
+      document.documentElement.classList.add(
+        `${nextProps.classNamePrefix}--opened`
+      );
     }
   }
 
@@ -72,10 +76,10 @@ export default class SimpleModalSlideshow extends Component {
     // Left arrow
     if (event.keyCode === 37) {
       this._handlePrev();
-    // Right arrow
+      // Right arrow
     } else if (event.keyCode === 39) {
       this._handleNext();
-    // Esc
+      // Esc
     } else if (event.keyCode === 27) {
       this._handleClose();
     }
@@ -85,7 +89,7 @@ export default class SimpleModalSlideshow extends Component {
    * Handle close event
    */
   _handleClose() {
-    log('Handle Close');
+    log("Handle Close");
 
     // If props.onClose is supplied, call it and stop here
     if (this.props.onClose) {
@@ -112,7 +116,7 @@ export default class SimpleModalSlideshow extends Component {
       return;
     }
 
-    log('Handle Prev');
+    log("Handle Prev");
 
     // If props.onPrev is supplied, call it and stop here
     if (this.props.onPrev) {
@@ -139,7 +143,7 @@ export default class SimpleModalSlideshow extends Component {
       return;
     }
 
-    log('Handle Next');
+    log("Handle Next");
 
     // If props.onNext is supplied, call it and stop here
     if (this.props.onNext) {
@@ -183,7 +187,9 @@ export default class SimpleModalSlideshow extends Component {
 
     // Make sure the slide exists
     if (index < 0 || index >= this.props.slides.length) {
-      throw new Error(`Invalid index '${index}' supplied to SimpleModalSlideshow::goTo()`);
+      throw new Error(
+        `Invalid index '${index}' supplied to SimpleModalSlideshow::goTo()`
+      );
     }
 
     log(`Go to slide ${index}`);
@@ -191,35 +197,38 @@ export default class SimpleModalSlideshow extends Component {
     // Update state with the new index and animation direction
     this.setState({
       currentSlide: index,
-      slideAnimationDirection: index < this.state.currentSlide ?
-        'right'
-        : 'left',
+      slideAnimationDirection:
+        index < this.state.currentSlide ? "right" : "left"
     });
   }
 
   _close() {
-    log('Close');
+    log("Close");
 
     // Remove class from html tag
-    document.documentElement.classList.remove(`${this.props.classNamePrefix}--opened`);
+    document.documentElement.classList.remove(
+      `${this.props.classNamePrefix}--opened`
+    );
 
     // Remove keyboard event listener
-    document.removeEventListener('keydown', this._handleKeyboardInput);
+    document.removeEventListener("keydown", this._handleKeyboardInput);
 
     // Update state
     this.setState({
-      open: false,
+      open: false
     });
   }
 
   _open(index) {
-    log('Open');
+    log("Open");
 
     // Add a class to the body (to disable background scroll)
-    document.documentElement.classList.add(`${this.props.classNamePrefix}--opened`);
+    document.documentElement.classList.add(
+      `${this.props.classNamePrefix}--opened`
+    );
 
     // Enable keyboard event listener
-    document.addEventListener('keydown', this._handleKeyboardInput);
+    document.addEventListener("keydown", this._handleKeyboardInput);
 
     // If an index is given, jump to the slide before opening
     if (index !== undefined) {
@@ -228,7 +237,7 @@ export default class SimpleModalSlideshow extends Component {
 
     // Update state
     this.setState({
-      open: true,
+      open: true
     });
   }
 
@@ -237,7 +246,7 @@ export default class SimpleModalSlideshow extends Component {
    */
   goToPrev() {
     if (!this.props.enableApi) {
-      throw new Error('SimpleModalSlideshow API is disabled');
+      throw new Error("SimpleModalSlideshow API is disabled");
     }
 
     this._goToPrev();
@@ -248,7 +257,7 @@ export default class SimpleModalSlideshow extends Component {
    */
   goToNext() {
     if (!this.props.enableApi) {
-      throw new Error('SimpleModalSlideshow API is disabled');
+      throw new Error("SimpleModalSlideshow API is disabled");
     }
 
     this._goToNext();
@@ -261,7 +270,7 @@ export default class SimpleModalSlideshow extends Component {
    */
   goTo(index) {
     if (!this.props.enableApi) {
-      throw new Error('SimpleModalSlideshow API is disabled');
+      throw new Error("SimpleModalSlideshow API is disabled");
     }
 
     this._goTo(index);
@@ -274,7 +283,7 @@ export default class SimpleModalSlideshow extends Component {
    */
   open(index) {
     if (!this.props.enableApi) {
-      throw new Error('SimpleModalSlideshow API is disabled');
+      throw new Error("SimpleModalSlideshow API is disabled");
     }
 
     this._open(index);
@@ -285,7 +294,7 @@ export default class SimpleModalSlideshow extends Component {
    */
   close() {
     if (!this.props.enableApi) {
-      throw new Error('SimpleModalSlideshow API is disabled');
+      throw new Error("SimpleModalSlideshow API is disabled");
     }
 
     this._close();
@@ -295,10 +304,7 @@ export default class SimpleModalSlideshow extends Component {
     let modal = null;
 
     // Modal is added to the DOM only if it has a slide to display
-    if (
-      this.props.slides.length > 0
-      && this.state.open
-    ) {
+    if (this.props.slides.length > 0 && this.state.open) {
       modal = (
         <SimpleModal
           key="modal-slideshow"
@@ -319,60 +325,60 @@ export default class SimpleModalSlideshow extends Component {
     }
 
     return (
-        <ReactCSSTransitionGroup
-          component="div"
-          transitionName={`${this.props.classNamePrefix}__modal`}
-          transitionEnter={this.props.modalAnimations}
-          transitionLeave={this.props.modalAnimations}
-          transitionEnterTimeout={this.props.modalTransitionEnterTimeout}
-          transitionLeaveTimeout={this.props.modalTransitionLeaveTimeout}
-        >
-          {modal}
-        </ReactCSSTransitionGroup>
+      <ReactCSSTransitionGroup
+        component="div"
+        transitionName={`${this.props.classNamePrefix}__modal`}
+        transitionEnter={this.props.modalAnimations}
+        transitionLeave={this.props.modalAnimations}
+        transitionEnterTimeout={this.props.modalTransitionEnterTimeout}
+        transitionLeaveTimeout={this.props.modalTransitionLeaveTimeout}
+      >
+        {modal}
+      </ReactCSSTransitionGroup>
     );
   }
 }
 
 SimpleModalSlideshow.propTypes = {
   // Slides
-  slides: React.PropTypes.arrayOf(
-    React.PropTypes.shape({
-      media: React.PropTypes.node.isRequired,
-      content: React.PropTypes.node,
+  slides: PropTypes.arrayOf(
+    PropTypes.shape({
+      media: PropTypes.node.isRequired,
+      content: PropTypes.node
     })
   ).isRequired,
 
   // Controls
-  open: React.PropTypes.bool,
-  currentSlide: React.PropTypes.number,
+  open: PropTypes.bool,
+  currentSlide: PropTypes.number,
 
   // Options
-  enableApi: React.PropTypes.bool,
-  classNamePrefix: React.PropTypes.string,
+  enableApi: PropTypes.bool,
+  classNamePrefix: PropTypes.string,
 
   // Animations
-  modalAnimations: React.PropTypes.bool,
-  slideAnimations: React.PropTypes.bool,
-  modalTransitionEnterTimeout: React.PropTypes.number,
-  modalTransitionLeaveTimeout: React.PropTypes.number,
-  slideTransitionEnterTimeout: React.PropTypes.number,
-  slideTransitionLeaveTimeout: React.PropTypes.number,
+  modalAnimations: PropTypes.bool,
+  slideAnimations: PropTypes.bool,
+  modalTransitionEnterTimeout: PropTypes.number,
+  modalTransitionLeaveTimeout: PropTypes.number,
+  slideTransitionEnterTimeout: PropTypes.number,
+  slideTransitionLeaveTimeout: PropTypes.number,
 
   // Event listeners
-  onClose: React.PropTypes.func,
-  onPrev: React.PropTypes.func,
-  onNext: React.PropTypes.func,
+  onClose: PropTypes.func,
+  onPrev: PropTypes.func,
+  onNext: PropTypes.func
 };
 
 SimpleModalSlideshow.defaultProps = {
   open: false,
   currentSlide: 0,
   enableApi: false,
-  classNamePrefix: 'modal-slideshow',
+  classNamePrefix: "modal-slideshow",
   modalAnimations: true,
   slideAnimations: true,
   modalTransitionEnterTimeout: 300,
   modalTransitionLeaveTimeout: 300,
   slideTransitionEnterTimeout: 300,
-  slideTransitionLeaveTimeout: 300,
+  slideTransitionLeaveTimeout: 300
 };
